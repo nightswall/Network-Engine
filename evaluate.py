@@ -72,6 +72,6 @@ for predictor in model_checkpoints:
     print("Testing started with model: %s " % (predictor.split("/")[1]))
     test30(predictor)
     test30_reduced(predictor)
-    test30_augmented(test30_augmented)
+    test30_augmented(predictor)
 
 print(results)
