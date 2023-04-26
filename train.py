@@ -5,9 +5,9 @@ from data_loader import DataLoader
 from threading import Thread
 
 def train70():
-    training_path = "drive/MyDrive/train70.csv"
-    testing_path = "drive/MyDrive/test30.csv"
-    checkpoint_path = "checkpoints/cp70.ckpt"
+    training_path = "datasets/Data/FINAL_CSV/train70.csv"
+    testing_path = "datasets/Data/FINAL_CSV/test30.csv"
+    checkpoint_path = "checkpoints/ckpt70/cp70.ckpt"
     simplefilter(action = "ignore", category = FutureWarning)
     seed = 7
 
@@ -29,6 +29,7 @@ def train70():
                 epochs = 200,
                 batch_size = 1000
     )
+    y_pred_nn = detector.predict(x_test)
 
 def train70_reduced():
     training_path = "datasets/Data/FINAL_CSV/train70_reduced.csv"
@@ -59,9 +60,9 @@ def train70_reduced():
     y_pred_nn = detector.predict(x_test)
 
 def train70_augmented():
-    training_path = "drive/MyDrive/train70_augmented.csv"
-    testing_path = "drive/MyDrive/test30_augmented.csv"
-    checkpoint_path = "checkpoints/cp70_augmented.ckpt"
+    training_path = "datasets/Data/FINAL_CSV/train70_augmented.csv"
+    testing_path = "datasets/Data/FINAL_CSV/test30_augmented.csv"
+    checkpoint_path = "checkpoints/ckpt70augmented/cp70_augmented.ckpt"
     simplefilter(action = "ignore", category = FutureWarning)
     seed = 7
 
@@ -83,9 +84,10 @@ def train70_augmented():
                 epochs = 200,
                 batch_size = 1000
     )
+    y_pred_nn = detector.predict(x_test)
 
 def main():
-    train70_reduced()
+    train70()
 
 
 if __name__ == "__main__":
