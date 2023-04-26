@@ -43,5 +43,5 @@ class Model():
     return model, [monitor, checkpoint]
 
   def load_model(__self__, model, checkpoint_path):
-    model.load_weights(checkpoint_path).expect_less()
+    model.load_weights(checkpoint_path).expect_partial()
     return model
