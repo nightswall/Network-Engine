@@ -57,7 +57,6 @@ def train70_reduced():
     )
 
     y_pred_nn = detector.predict(x_test)
-	y_pred_nn = np.argmax(y_pred_nn,axis=1)
 
 def train70_augmented():
     training_path = "drive/MyDrive/train70_augmented.csv"
