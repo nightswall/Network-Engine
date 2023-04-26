@@ -4,6 +4,7 @@ from data_loader import DataLoader
 from sklearn import metrics
 from warnings import simplefilter
 import numpy as np
+import json
 
 model = Model()
 data_loader = DataLoader()
@@ -28,6 +29,9 @@ def test30(checkpoint_path):
     model_name = checkpoint_path.split("/")
 
     result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": [metrics.accuracy_score(y_test, y_pred), 100 * acc], "F1 Score": metrics.f1_score(y_test, y_pred, average = "weighted")}
+    result_json = json.dumps(result, indent = 4)
+    with open("result.json", "w") as out:
+        out.write(result_json)
     results.append(result)
 
 def test30_reduced(checkpoint_path):
@@ -47,6 +51,9 @@ def test30_reduced(checkpoint_path):
     model_name = checkpoint_path.split("/")
 
     result = {"Dataset": "test30_reduced", "Model": model_name[1], "Accuracy": [metrics.accuracy_score(y_test, y_pred), 100 * acc], "F1 Score": metrics.f1_score(y_test, y_pred, average = "weighted")}
+    result_json = json.dumps(result, indent = 4)
+    with open("result.json", "w") as out:
+        out.write(result_json)
     results.append(result)
 
 def test30_augmented(checkpoint_path):
@@ -65,7 +72,10 @@ def test30_augmented(checkpoint_path):
 
     model_name = checkpoint_path.split("/")
 
-    result = {"Dataset": "test30_augmented", "Model": model_name[1], "Accuracy": [metrics.accuracy_score(y_test, y_pred), 100 * acc], "F1 Score": metrics.f1_score(y_test, y_pred, average = "weighted")}
+    result = {"Dataset": "test30_augmented", "Model": model_name[1], "Accuracy": [100 * acc], "F1 Score": 0}
+    result_json = json.dumps(result, indent = 4)
+    with open("result.json", "w") as out:
+        out.write(result_json)
     results.append(result)
 
 for predictor in model_checkpoints:
