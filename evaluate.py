@@ -72,7 +72,7 @@ def test30_augmented(checkpoint_path):
 
     model_name = checkpoint_path.split("/")
 
-    result = {"Dataset": "test30_augmented", "Model": model_name[1], "Accuracy": [100 * acc], "F1 Score": 0}
+    result = {"Dataset": "test30_augmented", "Model": model_name[1], "Accuracy": [metrics.accuracy_score(y_test, y_pred), 100 * acc], "F1 Score": metrics.f1_score(y_test, y_pred, average = "weighted")}
     result_json = json.dumps(result, indent = 4)
     with open("result.json", "w") as out:
         out.write(result_json)
@@ -80,8 +80,6 @@ def test30_augmented(checkpoint_path):
 
 for predictor in model_checkpoints:
     print("Testing started with model: %s " % (predictor.split("/")[1]))
-    test30(predictor)
-    test30_reduced(predictor)
     test30_augmented(predictor)
 
 print(results)
