@@ -18,6 +18,7 @@ def test30(checkpoint_path):
     seed = 7
 
     x_test, y_test = data_loader.initialize_test_data(testing_path)
+    detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
     detector = model.load_model(detector, checkpoint_path)
 
     y_pred = detector.predict(x_test)
@@ -36,6 +37,7 @@ def test30_reduced(checkpoint_path):
     seed = 7
 
     x_test, y_test = data_loader.initialize_test_data(testing_path)
+    detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
     detector = model.load_model(detector, checkpoint_path)
 
     y_pred = detector.predict(x_test)
@@ -54,6 +56,7 @@ def test30_augmented(checkpoint_path):
     seed = 7
 
     x_test, y_test = data_loader.initialize_test_data(testing_path)
+    detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
     detector = model.load_model(detector, checkpoint_path)
 
     y_pred = detector.predict(x_test)
