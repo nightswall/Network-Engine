@@ -6,7 +6,7 @@ parser.add_argument("--trainset",  help = "Name of the dataset that should be us
 parser.add_argument("--testset", help = "Name of the dataset that should be used for validating.", required=True)
 parser.add_argument("--evaluate", help = "Automatically evaluate after training finishes.", action = "store_true")
 args = parser.parse_args()
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 from warnings import simplefilter
 import numpy as np
 from model import Model
