@@ -1,0 +1,2 @@
+model_checkpoint_path: "cp70_reduced.ckpt"
+all_model_checkpoint_paths: "cp70_reduced.ckpt"
