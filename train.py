@@ -3,24 +3,34 @@ import numpy as np
 from model import Model
 from data_loader import DataLoader
 from threading import Thread
+import argparse
+import os
 
-def train70():
-    training_path = "datasets/Data/FINAL_CSV/train70.csv"
-    testing_path = "datasets/Data/FINAL_CSV/test30.csv"
-    checkpoint_path = "checkpoints/ckpt70/cp70.ckpt"
+parser = argparse.ArgumentParser()
+parser.add_argument("--trainset",  help = "Name of the dataset that should be used for training.")
+parser.add_argument("--testset", help = "Name of the dataset that should be used for validating.")
+parser.add_argument("--evaluate", help = "If True, then automatically evaluate after training finishes.", type = bool)
+args = parser.parse_args()
+
+def train_model(training_set, testing_set):
+    training_path = "datasets/Data/FINAL_CSV/" + training_set + ".csv"
+    testing_path = "datasets/Data/FINAL_CSV/" + testing_set + ".csv"
+
+    model_name = training_path.split("n")[1]
+
+    checkpoint_path = "checkpoints/ckpt" + model_name + "/cp" + model_name + ".ckpt"
     simplefilter(action = "ignore", category = FutureWarning)
-    seed = 7
 
     model = Model()
     data_loader = DataLoader()
 
     x_train, y_train = data_loader.initalize_training_data(training_path)
-    x_test, y_test = data_loader.initialize_test_data(testing_path)
+    x_test, y_test = data_loader.initalize_training_data(testing_path)
 
     detector, callbacks = model.create_model(x_train.shape[1], checkpoint_path)
-    print("Training with train70 dataset started!\n")
+    print(f"Training with {training_set} dataset started!\n")
 
-    history = detector.fit(
+    _ = detector.fit(
                 x_train,
                 y_train,
                 validation_data = (x_test, y_test),
@@ -29,66 +39,15 @@ def train70():
                 epochs = 200,
                 batch_size = 1000
     )
-    y_pred_nn = detector.predict(x_test)
-
-def train70_reduced():
-    training_path = "datasets/Data/FINAL_CSV/train70_reduced.csv"
-    testing_path = "datasets/Data/FINAL_CSV/test30_reduced.csv"
-    checkpoint_path = "checkpoints/ckpt70reduced/cp70_reduced.ckpt"
-    simplefilter(action = "ignore", category = FutureWarning)
-    seed = 7
-
-    model = Model()
-    data_loader = DataLoader()
-
-    x_train, y_train = data_loader.initalize_training_data(training_path)
-    x_test, y_test = data_loader.initialize_test_data(testing_path)
-
-    detector, callbacks = model.create_model(x_train.shape[1], checkpoint_path)
-    print("Training with train70_reduced started!\n")
-
-    history = detector.fit(
-                x_train,
-                y_train,
-                validation_data = (x_test, y_test),
-                callbacks = callbacks,
-                verbose = 2,
-                epochs = 200,
-                batch_size = 1000
-    )
-
-    y_pred_nn = detector.predict(x_test)
-
-def train70_augmented():
-    training_path = "datasets/Data/FINAL_CSV/train70_augmented.csv"
-    testing_path = "datasets/Data/FINAL_CSV/test30_augmented.csv"
-    checkpoint_path = "checkpoints/ckpt70augmented/cp70_augmented.ckpt"
-    simplefilter(action = "ignore", category = FutureWarning)
-    seed = 7
-
-    model = Model()
-    data_loader = DataLoader()
-
-    x_train, y_train = data_loader.initalize_training_data(training_path)
-    x_test, y_test = data_loader.initialize_test_data(testing_path)
-
-    detector, callbacks = model.create_model(x_train.shape[1], checkpoint_path)
-    print("Training with train70_augmented started!\n")
-
-    history = detector.fit(
-                x_train,
-                y_train,
-                validation_data = (x_test, y_test),
-                callbacks = callbacks,
-                verbose = 2,
-                epochs = 200,
-                batch_size = 1000
-    )
-    y_pred_nn = detector.predict(x_test)
-
-def main():
-    train70()
-
 
 if __name__ == "__main__":
-    main()
+    auto_evaluate = args.evaluate
+    train_set_name = args.trainset
+    test_set_name = args.testset
+    train_model(train_set_name, test_set_name)
+    print("Training finished!")
+    if auto_evaluate:
+        print("Calling evaluator!")
+        command = "python3 evaluate.py"
+        os.system(command)
+        exit(0)
