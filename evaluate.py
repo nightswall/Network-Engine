@@ -12,7 +12,7 @@ data_loader = DataLoader()
 
 results = []
 model_checkpoints = ["checkpoints/ckpt70reduced/cp70_reduced.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
-CHUNK_SIZE = 100000
+CHUNK_SIZE = 10 ** 6
 
 def test30(checkpoint_path):
     global results
@@ -22,8 +22,10 @@ def test30(checkpoint_path):
 
     accuracies = []
     f1_scores = []
-
+    chunkNumber = 0
     for chunk in setDF:
+        chunkNumber += 1
+        print(f"In chunk {chunkNumber} with Test Set {testing_path}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
         detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
@@ -65,8 +67,10 @@ def test30_reduced(checkpoint_path):
 
     accuracies = []
     f1_scores = []
-
+    chunkNumber = 0
     for chunk in setDF:
+        chunkNumber += 1
+        print(f"In chunk {chunkNumber} with Test Set {testing_path}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
         detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
@@ -108,8 +112,10 @@ def test30_augmented(checkpoint_path):
 
     accuracies = []
     f1_scores = []
-
+    chunkNumber = 0
     for chunk in setDF:
+        chunkNumber += 1
+        print(f"In chunk {chunkNumber} with Test Set {testing_path}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
         detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
