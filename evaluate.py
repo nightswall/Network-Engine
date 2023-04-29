@@ -32,9 +32,8 @@ def test30(checkpoint_path):
 
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)
-        _, acc = detector.evaluate(x_test, y_test, verbose=2)
 
-        accuracies.append(100 * acc)
+        accuracies.append(metrics.accuracy_score(y_test, y_pred))
         f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
 
     avgAccuracy = 0
@@ -52,7 +51,7 @@ def test30(checkpoint_path):
     result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
     
-    file_name = "result" + model_name + ".json"
+    file_name = "result" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
@@ -77,9 +76,8 @@ def test30_reduced(checkpoint_path):
 
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)
-        _, acc = detector.evaluate(x_test, y_test, verbose=2)
 
-        accuracies.append(100 * acc)
+        accuracies.append(metrics.accuracy_score(y_test, y_pred))
         f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
 
     avgAccuracy = 0
@@ -97,7 +95,7 @@ def test30_reduced(checkpoint_path):
     result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
 
-    file_name = "result" + model_name + ".json"
+    file_name = "result" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
@@ -122,9 +120,8 @@ def test30_augmented(checkpoint_path):
 
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)
-        _, acc = detector.evaluate(x_test, y_test, verbose=2)
 
-        accuracies.append(100 * acc)
+        accuracies.append(metrics.accuracy_score(y_test, y_pred))
         f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
 
     avgAccuracy = 0
@@ -142,7 +139,7 @@ def test30_augmented(checkpoint_path):
     result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
 
-    file_name = "result" + model_name + ".json"
+    file_name = "result" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
