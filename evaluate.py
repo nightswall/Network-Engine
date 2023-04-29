@@ -12,11 +12,12 @@ data_loader = DataLoader()
 
 results = []
 model_checkpoints = ["checkpoints/ckpt70reduced/cp70_reduced.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
+test_sets = ["test30", "test30_reduced", "test30_augmented"]
 CHUNK_SIZE = 10 ** 6
 
-def test30(checkpoint_path):
+def test_model(checkpoint_path, test_set):
     global results
-    testing_path = "datasets/Data/FINAL_CSV/test30.csv"
+    testing_path = "datasets/Data/FINAL_CSV/" + test_set
     simplefilter(action = "ignore", category = FutureWarning)
     setDF = pd.read_csv(testing_path, chunksize = CHUNK_SIZE)
 
@@ -25,7 +26,7 @@ def test30(checkpoint_path):
     chunkNumber = 0
     for chunk in setDF:
         chunkNumber += 1
-        print(f"In chunk {chunkNumber} with Test Set {testing_path}")
+        print(f"In chunk {chunkNumber} with Test Set: {test_set}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
         detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
@@ -48,107 +49,19 @@ def test30(checkpoint_path):
 
     model_name = checkpoint_path.split("/")
 
-    result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
+    result = {"Dataset": test_set, "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
     
-    file_name = "result" + "_test30_" + model_name[1] + ".json"
+    file_name = "result" + "_" + test_set + "_" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
 
-    results.append(result)
-
-def test30_reduced(checkpoint_path):
-    global results
-    testing_path = "datasets/Data/FINAL_CSV/test30_reduced.csv"
-    simplefilter(action = "ignore", category = FutureWarning)
-    setDF = pd.read_csv(testing_path, chunksize = CHUNK_SIZE)
-
-    accuracies = []
-    f1_scores = []
-    chunkNumber = 0
-    for chunk in setDF:
-        chunkNumber += 1
-        print(f"In chunk {chunkNumber} with Test Set {testing_path}")
-        x_test, y_test = data_loader.initialize_test_data(chunk)
-        detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
-        detector = model.load_model(detector, checkpoint_path)   
-
-        y_pred = detector.predict(x_test)
-        y_pred = np.argmax(y_pred, axis = 1)
-
-        accuracies.append(metrics.accuracy_score(y_test, y_pred))
-        f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
-
-    avgAccuracy = 0
-    avgF1Score = 0
-
-    for idx in range(len(accuracies)):
-        avgAccuracy += accuracies[idx]
-        avgF1Score += f1_scores[idx]
-
-    avgAccuracy = avgAccuracy / len(accuracies)
-    avgF1Score = avgF1Score / len(f1_scores)
-
-    model_name = checkpoint_path.split("/")
-
-    result = {"Dataset": "test30reduced", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
-    result_json = json.dumps(result, indent = 4)
-
-    file_name = "result" + "_test30reduced_" + model_name[1] + ".json"
-
-    with open(file_name, "w") as out:
-        out.write(result_json)
-
-    results.append(result)
-
-def test30_augmented(checkpoint_path):
-    global results
-    testing_path = "datasets/Data/FINAL_CSV/test30_augmented.csv"
-    simplefilter(action = "ignore", category = FutureWarning)
-    setDF = pd.read_csv(testing_path, chunksize = CHUNK_SIZE)
-
-    accuracies = []
-    f1_scores = []
-    chunkNumber = 0
-    for chunk in setDF:
-        chunkNumber += 1
-        print(f"In chunk {chunkNumber} with Test Set {testing_path}")
-        x_test, y_test = data_loader.initialize_test_data(chunk)
-        detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
-        detector = model.load_model(detector, checkpoint_path)   
-
-        y_pred = detector.predict(x_test)
-        y_pred = np.argmax(y_pred, axis = 1)
-
-        accuracies.append(metrics.accuracy_score(y_test, y_pred))
-        f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
-
-    avgAccuracy = 0
-    avgF1Score = 0
-
-    for idx in range(len(accuracies)):
-        avgAccuracy += accuracies[idx]
-        avgF1Score += f1_scores[idx]
-
-    avgAccuracy = avgAccuracy / len(accuracies)
-    avgF1Score = avgF1Score / len(f1_scores)
-
-    model_name = checkpoint_path.split("/")
-
-    result = {"Dataset": "test30augmented", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
-    result_json = json.dumps(result, indent = 4)
-
-    file_name = "result" + "_test30augmented_" + model_name[1] + ".json"
-
-    with open(file_name, "w") as out:
-        out.write(result_json)
     results.append(result)
 
 for predictor in model_checkpoints:
     print("Testing started with model: %s " % (predictor.split("/")[1]))
-    test30(predictor)
-    test30_reduced(predictor)
-    test30_augmented(predictor)
+    for test in test_sets:
+        test_model(predictor, test)
 
 print(results)
