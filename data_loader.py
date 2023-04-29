@@ -18,8 +18,7 @@ class DataLoader():
 
         return x_training, y_training
 
-    def initialize_test_data(__self__, dataset_path):
-        testing_set = pd.read_csv(dataset_path)
+    def initialize_test_data(__self__, testing_set):
 
         class_names = testing_set.target.unique()
         testing_set = testing_set.astype("category")
