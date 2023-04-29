@@ -7,9 +7,9 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--trainset",  help = "Name of the dataset that should be used for training.")
-parser.add_argument("--testset", help = "Name of the dataset that should be used for validating.")
-parser.add_argument("--evaluate", help = "If True, then automatically evaluate after training finishes.", type = bool)
+parser.add_argument("--trainset",  help = "Name of the dataset that should be used for training.", required=True)
+parser.add_argument("--testset", help = "Name of the dataset that should be used for validating.", required=True)
+parser.add_argument("--evaluate", help = "Automatically evaluate after training finishes.", action = "store_true", required=True)
 args = parser.parse_args()
 
 def train_model(training_set, testing_set):
