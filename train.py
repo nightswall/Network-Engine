@@ -1,8 +1,3 @@
-from warnings import simplefilter
-import numpy as np
-from model import Model
-from data_loader import DataLoader
-from threading import Thread
 import argparse
 import os
 
@@ -11,6 +6,13 @@ parser.add_argument("--trainset",  help = "Name of the dataset that should be us
 parser.add_argument("--testset", help = "Name of the dataset that should be used for validating.", required=True)
 parser.add_argument("--evaluate", help = "Automatically evaluate after training finishes.", action = "store_true", required=True)
 args = parser.parse_args()
+
+from warnings import simplefilter
+import numpy as np
+from model import Model
+from data_loader import DataLoader
+from threading import Thread
+
 
 def train_model(training_set, testing_set):
     training_path = "datasets/Data/FINAL_CSV/" + training_set + ".csv"
