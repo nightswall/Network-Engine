@@ -17,7 +17,7 @@ CHUNK_SIZE = 10 ** 6
 
 def test_model(checkpoint_path, test_set):
     global results
-    testing_path = "datasets/Data/FINAL_CSV/" + test_set
+    testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
     simplefilter(action = "ignore", category = FutureWarning)
     setDF = pd.read_csv(testing_path, chunksize = CHUNK_SIZE)
 
