@@ -51,7 +51,7 @@ def test30(checkpoint_path):
     result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
     
-    file_name = "result" + model_name[1] + ".json"
+    file_name = "result" + "_test30_" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
@@ -92,10 +92,10 @@ def test30_reduced(checkpoint_path):
 
     model_name = checkpoint_path.split("/")
 
-    result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
+    result = {"Dataset": "test30reduced", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
 
-    file_name = "result" + model_name[1] + ".json"
+    file_name = "result" + "_test30reduced_" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
@@ -136,10 +136,10 @@ def test30_augmented(checkpoint_path):
 
     model_name = checkpoint_path.split("/")
 
-    result = {"Dataset": "test30", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
+    result = {"Dataset": "test30augmented", "Model": model_name[1], "Accuracy": avgAccuracy, "F1 Score": avgF1Score}
     result_json = json.dumps(result, indent = 4)
 
-    file_name = "result" + model_name[1] + ".json"
+    file_name = "result" + "_test30augmented_" + model_name[1] + ".json"
 
     with open(file_name, "w") as out:
         out.write(result_json)
