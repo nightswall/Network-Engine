@@ -34,6 +34,7 @@ def test_model(checkpoint_path, test_set):
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)
         print(y_pred)
+        print(y_test)
 
         accuracies.append(metrics.accuracy_score(y_test, y_pred))
         f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
