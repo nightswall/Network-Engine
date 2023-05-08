@@ -11,7 +11,7 @@ model = Model()
 data_loader = DataLoader()
 
 results = []
-model_checkpoints = ["checkpoints/ckpt70_reduced.csv/cp70_reduced.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
+model_checkpoints = ["checkpoints/ckpt70_reduced.csv/cp70_reduced.csv.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
 test_sets = ["test30", "test30_reduced", "test30_augmented"]
 CHUNK_SIZE = 10 ** 6
 
