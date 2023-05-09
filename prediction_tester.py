@@ -32,6 +32,8 @@ def test_model(checkpoint_path, test_set):
     global results
     testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
     simplefilter(action = "ignore", category = FutureWarning)
+    detector, _ = model.create_model(33, checkpoint_path)
+    detector = model.load_model(detector, checkpoint_path)   
 
     for idx in range(500):
         df = pd.read_csv(testing_path, skiprows=idx+1, nrows=1)
@@ -45,9 +47,8 @@ def test_model(checkpoint_path, test_set):
                 x_testing[0][idx] = fl(int(x_testing[0][idx], 16)).value
             except:
                 pass
+        print(x_testing)
         x_testing = np.asarray(x_testing).astype('float32')
-        detector, _ = model.create_model(x_testing.shape[1], checkpoint_path)
-        detector = model.load_model(detector, checkpoint_path)   
         print(get_prediction(detector, x_testing))
 
 test_model(model_checkpoints[0], test_sets[1])
