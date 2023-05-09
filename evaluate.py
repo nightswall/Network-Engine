@@ -28,7 +28,8 @@ def test_model(checkpoint_path, test_set):
         chunkNumber += 1
         print(f"In chunk {chunkNumber} with Test Set: {test_set}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
-        detector = model.load_model(checkpoint_path)   
+        detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
+        detector = model.load_model(detector, checkpoint_path)   
 
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)

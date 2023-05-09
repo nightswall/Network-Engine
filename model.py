@@ -42,7 +42,6 @@ class Model():
                 verbose = 1)
     return model, [monitor, checkpoint]
 
-  def load_model(__self__, checkpoint_path):
-    model = tf.keras.models.Sequential()
+  def load_model(__self__, model, checkpoint_path):
     model.load_weights(checkpoint_path).expect_partial()
     return model
