@@ -36,4 +36,4 @@ def test_model(checkpoint_path, test_set):
 
         print(get_prediction(detector, x_test))
 
-test_model(model_checkpoints[1], test_sets[0])
+test_model(model_checkpoints[0], test_sets[1])
