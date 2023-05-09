@@ -16,6 +16,8 @@ def get_prediction(model = None, incoming_message = None):
 		prediction = model.predict(incoming_message)
 		prediction = np.argmax(prediction, axis = 1)
 
+		print(prediction)
+
 		result = dict()
 
 		if prediction[0] != 2:
