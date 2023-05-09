@@ -22,7 +22,7 @@ def test_model(checkpoint_path, test_set):
     simplefilter(action = "ignore", category = FutureWarning)
 
     for idx in range(500):
-        df = pd.read_csv(testing_path, skiprows=idx, nrows=1)
+        df = pd.read_csv(testing_path, skiprows=idx+1, nrows=1)
         print(f"In chunk {idx} with Test Set: {test_set}")
 
         df = df.columns.drop("target")
