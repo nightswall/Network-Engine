@@ -21,7 +21,6 @@ class Model():
     model.add(tf.keras.layers.Dense(
               6,
               activation = 'softmax'))
-    model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # Code below will help us to quit training when decrease in
     # validation loss happens more than 5 times. Model is either
