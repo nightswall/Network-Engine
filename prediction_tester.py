@@ -16,6 +16,18 @@ model_checkpoints = ["checkpoints/ckpt70_reduced.csv/cp70_reduced.csv.ckpt", "ch
 test_sets = ["test30", "test30_reduced", "test30_augmented"]
 CHUNK_SIZE = 10 ** 6
 
+class fl:
+    def __init__(this, value=0, byte_size=4):
+        this.value = value
+        if this.value: # speedy check (before performing any calculations)
+            Fe=((byte_size*8)-1)//(byte_size+1)+(byte_size>2)*byte_size//2+(byte_size==3)
+            Fm,Fb,Fie=(((byte_size*8)-(1+Fe)), ~(~0<<Fe-1), (1<<Fe)-1)
+            FS,FE,FM=((this.value>>((byte_size*8)-1))&1,(this.value>>Fm)&Fie,this.value&~(~0 << Fm))
+            if FE == Fie: this.value=(float('NaN') if FM!=0 else (float('+inf') if FS else float('-inf')))
+            else: this.value=((pow(-1,FS)*(2**(FE-Fb-Fm)*((1<<Fm)+FM))) if FE else pow(-1,FS)*(2**(1-Fb-Fm)*FM))
+            del Fe; del Fm; del Fb; del Fie; del FS; del FE; del FM
+        else: this.value = 0.0
+
 def test_model(checkpoint_path, test_set):
     global results
     testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
@@ -27,6 +39,7 @@ def test_model(checkpoint_path, test_set):
 
         del df[df.columns[-1]]
         x_testing = df[df.columns].values
+        print(x_testing[0])
         x_testing = np.asarray(x_testing).astype('float32')
 
         detector, _ = model.create_model(x_testing.shape[1], checkpoint_path)
