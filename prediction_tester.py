@@ -25,8 +25,8 @@ def test_model(checkpoint_path, test_set):
     ctrLeg = 0
     ctrMal = 0
 
-    for idx in range(500):
-        df = pd.read_csv(testing_path, skiprows=idx+1, nrows=2)
+    for idx in range(100):
+        df = pd.read_csv(testing_path, skiprows=idx+1, nrows=1)
 
         df = df.astype("category")
         category_columns = df.select_dtypes(["category"]).columns
