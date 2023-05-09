@@ -37,21 +37,17 @@ def test_model(checkpoint_path, test_set):
 
     for idx in range(500):
         df = pd.read_csv(testing_path, skiprows=idx+1, nrows=1)
-        print(f"In chunk {idx} with Test Set: {test_set}")
+
+        class_names = df.target.unique()
+        df = df.astype("category")
+        category_columns = df.select_dtypes(["category"]).columns
+
+        df[category_columns] = df[category_columns].apply(lambda x : x.cat.codes)
 
         del df[df.columns[-1]]
         x_testing = df[df.columns].values
 
-        for idx in range(len(x_testing[0])):
-            try:
-                x_testing[0][idx] = fl(int(x_testing[0][idx], 16)).value
-            except:
-                pass
-        print(x_testing)
-        try:
-            x_testing = np.asarray(x_testing).astype('float32')
-            print(get_prediction(detector, x_testing))
-        except:
-            continue
+        print(f"In chunk {idx} with Test Set: {test_set}")
+        print(get_prediction(detector, x_testing))
 
 test_model(model_checkpoints[0], test_sets[1])
