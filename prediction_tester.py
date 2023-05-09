@@ -29,7 +29,7 @@ def test_model(checkpoint_path, test_set):
     for chunk in df:
         x_test, y_test = data_loader.initialize_test_data(chunk)
 
-        res = get_prediction(detector, np.array( [x_test,] ))
+        res = get_prediction(detector, np.array( x_test ))
         if res["type"] == "LEGITIMATE":
             ctrLeg += 1
         else:
