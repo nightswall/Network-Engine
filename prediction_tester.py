@@ -36,7 +36,7 @@ def test_model(checkpoint_path, test_set):
     detector = model.load_model(detector, checkpoint_path)   
 
     for idx in range(500):
-        df = pd.read_csv(testing_path, skiprows=idx+1, nrows=1)
+        df = pd.read_csv(testing_path, skiprows=idx+1, nrows=2)
 
         class_names = df.target.unique()
         df = df.astype("category")
