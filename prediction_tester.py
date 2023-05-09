@@ -27,6 +27,8 @@ def test_model(checkpoint_path, test_set):
 
         df.columns.drop("target")
 
+        print(df.shape)
+
 
         detector, _ = model.create_model(df.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
