@@ -25,7 +25,7 @@ def test_model(checkpoint_path, test_set):
         df = pd.read_csv(testing_path, skiprows=idx, nrows=1)
         print(f"In chunk {idx} with Test Set: {test_set}")
 
-        print(df.to_string())
+        df.columns.drop("target")
 
 
         detector, _ = model.create_model(df.shape[1], checkpoint_path)
