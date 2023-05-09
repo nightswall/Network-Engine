@@ -29,11 +29,11 @@ def test_model(checkpoint_path, test_set):
         print(f"In chunk {chunkNumber} with Test Set: {test_set}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
 
-        print(y_test)
+        print(x_test)
 
         detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
 
-        get_prediction(detector, y_test)
+        get_prediction(detector, x_test)
 
 test_model(model_checkpoints[1], test_sets[0])
