@@ -2,11 +2,8 @@ from model import Model
 import numpy as np
 import json
 
-flow_types = {0: "bruteforce",
-			  1: "dos",
-			  2: "legitimate",
-			  3: "malformed",
-			  4: "slowite"
+flow_types = {0: "dos",
+			  1: "legitimate",
 			 }
 
 def get_prediction(model = None, incoming_message = None):
@@ -20,7 +17,7 @@ def get_prediction(model = None, incoming_message = None):
 
 		result = dict()
 
-		if prediction[0] != 2:
+		if prediction[0] != 1:
 			result = {"type": "MALICIOUS", "prediction": flow_types[prediction[0]]}
 		else:
 			result = {"type": "LEGITIMATE", "prediction": flow_types[prediction[0]]}
