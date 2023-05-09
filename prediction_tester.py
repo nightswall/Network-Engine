@@ -24,7 +24,7 @@ def test_model(checkpoint_path, test_set):
     for idx in range(500):
         df = pd.read_csv(testing_path, skiprows=idx, nrows=1)
         print(f"In chunk {idx} with Test Set: {test_set}")
-        x_test, y_test = data_loader.initialize_test_data(chunk)
+        x_test, y_test = data_loader.initialize_test_data(df)
 
         print(x_test)
 
