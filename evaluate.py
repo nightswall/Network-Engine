@@ -11,7 +11,7 @@ model = Model()
 data_loader = DataLoader()
 
 results = []
-model_checkpoints = ["checkpoints/ckpt70reduced/cp70_reduced.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
+model_checkpoints = ["checkpoints/ckpt70_reduced/cp70_reduced.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
 test_sets = ["test30", "test30_reduced", "test30_augmented"]
 CHUNK_SIZE = 10 ** 6
 
@@ -28,8 +28,7 @@ def test_model(checkpoint_path, test_set):
         chunkNumber += 1
         print(f"In chunk {chunkNumber} with Test Set: {test_set}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
-        detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
-        detector = model.load_model(detector, checkpoint_path)   
+        detector = model.load_model(checkpoint_path)   
 
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)
