@@ -29,8 +29,6 @@ def test_model(checkpoint_path, test_set):
     for chunk in df:
         x_test, y_test = data_loader.initialize_test_data(chunk)
 
-        print(f"In chunk {chunk} with Test Set: {test_set}")
-
         res = get_prediction(detector, x_test)
         if res["type"] == "LEGITIMATE":
             ctrLeg += 1
@@ -39,4 +37,4 @@ def test_model(checkpoint_path, test_set):
 
     print (ctrLeg, ctrMal, ctrLeg / ctrMal)
 
-test_model(model_checkpoints[0], test_sets[1])
+test_model(model_checkpoints[0], test_sets[0])
