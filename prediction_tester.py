@@ -27,13 +27,11 @@ def test_model(checkpoint_path, test_set):
 
         del df[df.columns[-1]]
 
-        df = np.asarray(df).astype('float32')
-        print(df.shape)
+        x_testing = df[df.columns].values
 
-
-        detector, _ = model.create_model(df.shape[1], checkpoint_path)
+        detector, _ = model.create_model(x_testing.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
 
-        print(get_prediction(detector, df))
+        print(get_prediction(detector, x_testing))
 
 test_model(model_checkpoints[0], test_sets[1])
