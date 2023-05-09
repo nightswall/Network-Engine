@@ -39,18 +39,15 @@ def test_model(checkpoint_path, test_set):
 
         del df[df.columns[-1]]
         x_testing = df[df.columns].values
-        print(x_testing)
-        x_testing[0][0] = fl(int(x_testing[0][0], 16)).value
-        try:
-            x_testing[0][16] = fl(int(x_testing[0][16], 16)).value
-        except:
-            pass
-        finally:
-            x_testing = np.asarray(x_testing).astype('float32')
 
-            detector, _ = model.create_model(x_testing.shape[1], checkpoint_path)
-            detector = model.load_model(detector, checkpoint_path)   
-
-            print(get_prediction(detector, x_testing))
+        for idx in range(len(x_testing[0])):
+            try:
+                x_testing[0][idx] = fl(int(x_testing[0][idx], 16)).value
+            except:
+                pass
+        x_testing = np.asarray(x_testing).astype('float32')
+        detector, _ = model.create_model(x_testing.shape[1], checkpoint_path)
+        detector = model.load_model(detector, checkpoint_path)   
+        print(get_prediction(detector, x_testing))
 
 test_model(model_checkpoints[0], test_sets[1])
