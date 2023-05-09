@@ -44,6 +44,7 @@ def test_model(checkpoint_path, test_set):
 
         del df[df.columns[-1]]
         x_testing = df[df.columns].values
+        print(x_testing)
 
         print(f"In chunk {idx} with Test Set: {test_set}")
         print(get_prediction(detector, x_testing))
