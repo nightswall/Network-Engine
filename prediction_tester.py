@@ -26,6 +26,8 @@ def test_model(checkpoint_path, test_set):
         print(f"In chunk {idx} with Test Set: {test_set}")
 
         del df[df.columns[-1]]
+
+        df = np.asarray(df).astype('float32')
         print(df.shape)
 
 
