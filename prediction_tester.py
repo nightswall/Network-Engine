@@ -39,7 +39,7 @@ def test_model(checkpoint_path, test_set):
 
         del df[df.columns[-1]]
         x_testing = df[df.columns].values
-        print(x_testing[0][0])
+        x_testing[0][0] = fl(x_testing[0][0]).value
         x_testing = np.asarray(x_testing).astype('float32')
 
         detector, _ = model.create_model(x_testing.shape[1], checkpoint_path)
