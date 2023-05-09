@@ -38,6 +38,7 @@ def test_model(checkpoint_path, test_set):
     for idx in range(500):
         df = pd.read_csv(testing_path, skiprows=idx+1, nrows=2)
 
+        df = df.astype("category")
         category_columns = df.select_dtypes(["category"]).columns
 
         df[category_columns] = df[category_columns].apply(lambda x : x.cat.codes)
