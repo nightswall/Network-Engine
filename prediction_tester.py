@@ -21,7 +21,7 @@ def test_model(checkpoint_path, test_set):
     simplefilter(action = "ignore", category = FutureWarning)
     detector, _ = model.create_model(33, checkpoint_path)
     detector = model.load_model(detector, checkpoint_path) 
-    df = pd.read_csv(testing_path, chunksize = 10)  
+    df = pd.read_csv(testing_path, chunksize = 1)  
 
     ctrLeg = 0
     ctrMal = 0
