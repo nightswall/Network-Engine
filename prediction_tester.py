@@ -25,7 +25,7 @@ def test_model(checkpoint_path, test_set):
         df = pd.read_csv(testing_path, skiprows=idx, nrows=1)
         print(f"In chunk {idx} with Test Set: {test_set}")
 
-        df.columns.drop("target")
+        df = df.columns.drop("target")
 
         print(df.shape)
 
