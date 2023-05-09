@@ -20,17 +20,16 @@ def test_model(checkpoint_path, test_set):
     global results
     testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
     simplefilter(action = "ignore", category = FutureWarning)
-    setDF = pd.read_csv(testing_path, chunksize = 1)
+    setDF = pd.read_csv(testing_path, chunksize = 10)
 
     
     chunkNumber = 0
     for chunk in setDF:
         chunkNumber += 1
         print(f"In chunk {chunkNumber} with Test Set: {test_set}")
-        x_test, y_test = data_loader.initialize_test_data(chunk)
+        x_test, y_test = data_loader.initialize_test_data(chunk[0])
 
         print(x_test)
-        x_test = np.expand_dims(x_test, axis = 0)
 
         detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
         detector = model.load_model(detector, checkpoint_path)   
