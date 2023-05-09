@@ -11,9 +11,9 @@ flow_types = {0: "bruteforce",
 
 def get_prediction(model = None, incoming_message = None):
 	global flow_types
-	if model and not incoming_message.empty:
+	if model and incoming_message:
 		# Prediction from the engine
-		prediction = model.predict(incoming_message, batch_size = 1)
+		prediction = model.predict(incoming_message)
 		prediction = np.argmax(prediction, axis = 1)
 
 		print(prediction)
