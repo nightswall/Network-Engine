@@ -37,4 +37,4 @@ def test_model(checkpoint_path, test_set):
 
     print (ctrLeg, ctrMal, ctrLeg / ctrMal)
 
-test_model(model_checkpoints[0], test_sets[0])
+test_model(model_checkpoints[0], test_sets[1])
