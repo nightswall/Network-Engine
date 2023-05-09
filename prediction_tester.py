@@ -22,6 +22,9 @@ def test_model(checkpoint_path, test_set):
     detector, _ = model.create_model(33, checkpoint_path)
     detector = model.load_model(detector, checkpoint_path)   
 
+    ctrLeg = 0
+    ctrMal = 0
+
     for idx in range(500):
         df = pd.read_csv(testing_path, skiprows=idx+1, nrows=2)
 
@@ -34,6 +37,13 @@ def test_model(checkpoint_path, test_set):
         x_testing = df[df.columns].values
 
         print(f"In chunk {idx} with Test Set: {test_set}")
-        print(get_prediction(detector, x_testing))
+
+        res = get_prediction(detector, x_testing)
+        if res["type"] == "LEGITIMATE":
+            ctrLeg += 1
+        else:
+            ctrMal += 1
+
+    print (ctrLeg, ctrMal, ctrLeg / ctrMal)
 
 test_model(model_checkpoints[0], test_sets[0])
