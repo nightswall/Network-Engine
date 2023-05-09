@@ -20,25 +20,18 @@ def test_model(checkpoint_path, test_set):
     testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
     simplefilter(action = "ignore", category = FutureWarning)
     detector, _ = model.create_model(33, checkpoint_path)
-    detector = model.load_model(detector, checkpoint_path)   
+    detector = model.load_model(detector, checkpoint_path) 
+    df = pd.read_csv(testing_path, chunksize = 1)  
 
     ctrLeg = 0
     ctrMal = 0
 
-    for idx in range(600):
-        df = pd.read_csv(testing_path, skiprows=idx+1, nrows=1)
-
-        df = df.astype("category")
-        category_columns = df.select_dtypes(["category"]).columns
-
-        df[category_columns] = df[category_columns].apply(lambda x : x.cat.codes)
-
-        del df[df.columns[-1]]
-        x_testing = df[df.columns].values
+    for chunk in df:
+        x_test, y_test = data_loader.initialize_test_data(chunk)
 
         print(f"In chunk {idx} with Test Set: {test_set}")
 
-        res = get_prediction(detector, x_testing)
+        res = get_prediction(detector, x_test)
         if res["type"] == "LEGITIMATE":
             ctrLeg += 1
         else:
