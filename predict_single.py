@@ -17,9 +17,9 @@ def get_prediction(model = None, incoming_message = None):
 
 		result = dict()
 
-		if prediction[0] != 1:
-			result = {"type": "MALICIOUS", "prediction": flow_types[prediction[0]]}
+		if prediction[1] != 1:
+			result = {"type": "MALICIOUS", "prediction": flow_types[prediction[1]]}
 		else:
-			result = {"type": "LEGITIMATE", "prediction": flow_types[prediction[0]]}
+			result = {"type": "LEGITIMATE", "prediction": flow_types[prediction[1]]}
 
 		return result
