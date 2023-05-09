@@ -13,7 +13,7 @@ def get_prediction(model = None, incoming_message = None):
 	global flow_types
 	if model is not None and incoming_message is not None:
 		# Prediction from the engine
-		prediction = model.predict(incoming_message, batch_size = 1)
+		prediction = model.predict(incoming_message)
 		prediction = np.argmax(prediction, axis = 1)
 
 		print(prediction)
