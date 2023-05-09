@@ -29,7 +29,7 @@ def test_model(checkpoint_path, test_set):
     for chunk in df:
         x_test, y_test = data_loader.initialize_test_data(chunk)
 
-        print(f"In chunk {idx} with Test Set: {test_set}")
+        print(f"In chunk {chunk} with Test Set: {test_set}")
 
         res = get_prediction(detector, x_test)
         if res["type"] == "LEGITIMATE":
