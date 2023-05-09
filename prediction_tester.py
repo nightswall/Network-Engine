@@ -48,6 +48,10 @@ def test_model(checkpoint_path, test_set):
             except:
                 pass
         print(x_testing)
-        print(get_prediction(detector, x_testing))
+        try:
+            x_testing = np.asarray(x_testing).astype('float32')
+            print(get_prediction(detector, x_testing))
+        except:
+            continue
 
 test_model(model_checkpoints[0], test_sets[1])
