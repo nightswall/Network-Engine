@@ -20,7 +20,7 @@ def test_model(checkpoint_path, test_set):
     global results
     testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
     simplefilter(action = "ignore", category = FutureWarning)
-    setDF = pd.read_csv(testing_path, chunksize = 1)
+    setDF = pd.read_csv(testing_path, chunksize = 10)
 
     
     chunkNumber = 0
