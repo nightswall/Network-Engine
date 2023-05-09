@@ -26,7 +26,6 @@ def test_model(checkpoint_path, test_set):
         print(f"In chunk {idx} with Test Set: {test_set}")
 
         del df[df.columns[-1]]
-        df = np.expand_dims(df, axis=0)
         print(df.shape)
 
 
