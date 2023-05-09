@@ -21,7 +21,7 @@ def test_model(checkpoint_path, test_set):
     simplefilter(action = "ignore", category = FutureWarning)
     detector, _ = model.create_model(33, checkpoint_path)
     detector = model.load_model(detector, checkpoint_path) 
-    df = pd.read_csv(testing_path, chunksize = 1)  
+    df = pd.read_csv(testing_path, chunksize = 10)  
 
     ctrLeg = 0
     ctrMal = 0
@@ -29,7 +29,7 @@ def test_model(checkpoint_path, test_set):
     for chunk in df:
         x_test, y_test = data_loader.initialize_test_data(chunk)
 
-        res = get_prediction(detector, np.array( x_test ))
+        res = get_prediction(detector, x_test)
         if res["type"] == "LEGITIMATE":
             ctrLeg += 1
         else:
