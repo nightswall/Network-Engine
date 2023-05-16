@@ -1,0 +1,6 @@
+{
+    "Dataset": "test30_augmented",
+    "Model": "ckpt70reduced",
+    "Accuracy": 0.7105669999999998,
+    "F1 Score": 0.6587187716210288
+}

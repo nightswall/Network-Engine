@@ -12,15 +12,20 @@ import numpy as np
 from model import Model
 from data_loader import DataLoader
 from threading import Thread
+import tensorflow.compat.v1 as tf
 
+tf.disable_v2_behavior()
 
 def train_model(training_set, testing_set):
     training_path = "datasets/Data/FINAL_CSV/" + training_set + ".csv"
     testing_path = "datasets/Data/FINAL_CSV/" + testing_set + ".csv"
 
-    model_name = training_path.split("n")[1]
+    model_name = training_path.split("n")[1].split(".")[0]
+
+    print(model_name)
 
     checkpoint_path = "checkpoints/ckpt" + model_name + "/cp" + model_name + ".ckpt"
+    session_path = "checkpoints/ckpt" + model_name + "/session.ckpt"
     simplefilter(action = "ignore", category = FutureWarning)
 
     model = Model()
@@ -39,8 +44,11 @@ def train_model(training_set, testing_set):
                 callbacks = callbacks,
                 verbose = 2,
                 epochs = 200,
-                batch_size = 1000
+                batch_size = 32
     )
+    saver = tf.train.Saver()
+    sess = tf.keras.backend.get_session()
+    saver.save(sess, session_path)
 
 if __name__ == "__main__":
     auto_evaluate = args.evaluate

@@ -12,14 +12,18 @@ data_loader = DataLoader()
 
 results = []
 model_checkpoints = ["checkpoints/ckpt70_reduced/cp70_reduced.ckpt", "checkpoints/ckpt70/cp70.ckpt"]
+session_checkpoints = ["checkpoints/ckpt70_reduced/session.ckpt", "checkpoints/ckpt70/session.ckpt"]
 test_sets = ["test30", "test30_reduced", "test30_augmented"]
 CHUNK_SIZE = 10 ** 6
 
-def test_model(checkpoint_path, test_set):
+def test_model(checkpoint_path, test_set, session_path):
     global results
     testing_path = "datasets/Data/FINAL_CSV/" + test_set + ".csv"
     simplefilter(action = "ignore", category = FutureWarning)
     setDF = pd.read_csv(testing_path, chunksize = CHUNK_SIZE)
+
+    detector, _ = model.create_model(33, checkpoint_path)
+    detector = model.load_model(detector, checkpoint_path, session_path)
 
     accuracies = []
     f1_scores = []
@@ -28,11 +32,17 @@ def test_model(checkpoint_path, test_set):
         chunkNumber += 1
         print(f"In chunk {chunkNumber} with Test Set: {test_set}")
         x_test, y_test = data_loader.initialize_test_data(chunk)
-        detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
-        detector = model.load_model(detector, checkpoint_path)   
+        #detector, _ = model.create_model(x_test.shape[1], checkpoint_path)
+        #detector = model.load_model(detector, checkpoint_path, session_path)   
 
         y_pred = detector.predict(x_test)
         y_pred = np.argmax(y_pred, axis = 1)
+
+        #print(y_pred)
+        #print(y_test)
+
+        #break
+
 
         accuracies.append(metrics.accuracy_score(y_test, y_pred))
         f1_scores.append(metrics.f1_score(y_test, y_pred, average = "weighted"))
@@ -59,9 +69,6 @@ def test_model(checkpoint_path, test_set):
 
     results.append(result)
 
-for predictor in model_checkpoints:
-    print("Testing started with model: %s " % (predictor.split("/")[1]))
-    for test in test_sets:
-        test_model(predictor, test)
+test_model(model_checkpoints[0], test_sets[1], session_checkpoints[0])
 
 print(results)

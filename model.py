@@ -2,6 +2,8 @@ import os
 import tensorflow as tf
 from tensorflow import keras
 
+tf.compat.v1.disable_v2_behavior()
+
 class Model():
   def create_model(__self__, input_dim, checkpoint_path):
     model = tf.keras.models.Sequential()
@@ -21,7 +23,7 @@ class Model():
     model.add(tf.keras.layers.Dense(
               6,
               activation = 'softmax'))
-
+    model.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
     # Code below will help us to quit training when decrease in
     # validation loss happens more than 5 times. Model is either
     # overfitting or underfitting in this case. So, continueing the
@@ -41,6 +43,9 @@ class Model():
                 verbose = 1)
     return model, [monitor, checkpoint]
 
-  def load_model(__self__, model, checkpoint_path):
+  def load_model(__self__, model, checkpoint_path, session_path):
     model.load_weights(checkpoint_path).expect_partial()
+    saver = tf.compat.v1.train.Saver()
+    sess = tf.compat.v1.keras.backend.get_session()
+    saver.restore(sess, session_path)
     return model
