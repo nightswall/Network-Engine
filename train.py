@@ -44,7 +44,7 @@ def train_model(training_set, testing_set):
                 callbacks = callbacks,
                 verbose = 2,
                 epochs = 200,
-                batch_size = 32
+                batch_size = 1000
     )
     saver = tf.train.Saver()
     sess = tf.keras.backend.get_session()

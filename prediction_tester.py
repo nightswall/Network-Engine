@@ -23,7 +23,7 @@ def test_model(checkpoint_path, test_set, session_path):
     detector, _ = model.create_model(33, checkpoint_path)
     detector = model.load_model(detector, checkpoint_path, session_path) 
     #detector.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    df = pd.read_csv(testing_path, chunksize = 500)  
+    df = pd.read_csv(testing_path, chunksize = 10 ** 6)  
 
     ctrLeg = 0
     ctrMal = 0
@@ -47,4 +47,4 @@ def test_model(checkpoint_path, test_set, session_path):
         #ctr += 1
     print (ctrLeg, ctrMal, ctrLeg / ctrMal)
 
-test_model(model_checkpoints[0], test_sets[1], session_checkpoints[0])
+test_model(model_checkpoints[1], test_sets[0], session_checkpoints[0])
