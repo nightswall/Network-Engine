@@ -28,7 +28,4 @@ def get_prediction(incoming_message = None):
 			result.append(f)
 
 		decisions = {"type": "RESPONSE", "predictions": result} # Decision
-		response = HttpResponse(json.dumps({
-				"prediction": decisions
-			}))
 		return response
