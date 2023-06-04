@@ -108,17 +108,17 @@ flow_types = {3: "legitimate", 1: "dos", 0: "bruteforce", 4: "malformed", 5: "sl
 model_checkpoint = "/home/gorkem/network-engine/api/myapp/cp70_reduced.ckpt"
 session_checkpoint = "/home/gorkem/network-engine/api/myapp/session.ckpt"
 
-# Compiling the pre-trained model beforehand to keep it from re-compiling again and again
-# in each call to the get_prediction function
-
-model = Model()
-detector, _ = model.create_model(33, model_checkpoint) # Creating a new model for reference
-detector = model.load_model(detector, model_checkpoint, session_checkpoint) # Loading model checkpoint and session
-detector.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy']) # Compiling the loaded model
 
 
 def get_prediction(incoming_message = None):
-	global flow_types, model_checkpoint, session_checkpoint, detector
+	global flow_types, model_checkpoint, session_checkpoint
+  # Compiling the pre-trained model beforehand to keep it from re-compiling again and again
+  # in each call to the get_prediction function
+
+  model = Model()
+  detector, _ = model.create_model(33, model_checkpoint) # Creating a new model for reference
+  detector = model.load_model(detector, model_checkpoint, session_checkpoint) # Loading model checkpoint and session
+  detector.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy']) # Compiling the loaded model
 
 	if incoming_message is not None: # Checking if a valid request is made
 		prediction = detector.predict(incoming_message) # Prediction from the engine
