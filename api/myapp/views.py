@@ -46,7 +46,7 @@ class Model():
     monitor = tf.keras.callbacks.EarlyStopping(
               monitor = 'val_loss',
               min_delta = 1e-3,
-              patience = 5,
+              patience = 8,
               verbose = 1,
               mode = 'auto')
     # Code below will help us to save trained models and use them afterwards.
@@ -98,6 +98,7 @@ class DataLoader():
         testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
         testing_set["target"] = testing_set["target"].apply(lambda x : classes[x])
 
+        x_columns = testing_set.columns.drop("target")
         x_testing = testing_set[x_columns].values
         y_testing = testing_set["target"]
 

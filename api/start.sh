@@ -16,4 +16,4 @@ rm myapp/lstm_model_Current_9.pt
 rm tempNewDataCurrent.csv
 rm Current_data.npz
 # Run server
-python3 manage.py runserver 0.0.0.0:8000 --noreload
+python3 manage.py runserver 0.0.0.0:8004 --noreload
