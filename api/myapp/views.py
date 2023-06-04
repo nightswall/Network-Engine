@@ -87,7 +87,7 @@ class DataLoader():
         testing_set = testing_set.astype("category")
         category_columns = testing_set.select_dtypes(["category"]).columns
         #classes = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flooding": 5}
-				classes = {"bruteforce": 0, "dos": 1, "flood": 2, "malformed": 4, "legitimate": 3, "slowite": 5}
+        classes = {"bruteforce": 0, "dos": 1, "flood": 2, "malformed": 4, "legitimate": 3, "slowite": 5}
         # for category in category_columns:
         #     if category != "target":
         #         testing_set[category] = testing_set[category].apply(lambda x : x.cat.codes)
