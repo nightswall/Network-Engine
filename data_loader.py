@@ -18,17 +18,17 @@ class DataLoader():
         #     if category != "target":
         #         testing_set[category] = testing_set[category].apply(lambda x : x.cat.codes)
 
-        training_set["tcp.flags"] = training_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
-        training_set["mqtt.conflags"] = training_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
-        training_set["mqtt.hdrflags"] = training_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
+        #training_set["tcp.flags"] = training_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
+        #training_set["mqtt.conflags"] = training_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
+        #training_set["mqtt.hdrflags"] = training_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
         
         #testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
         #testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
         #testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
+
+
+        training_set[category_columns] = training_set[category_columns].apply(lambda x : x.cat.codes)
         training_set["target"] = training_set["target"].apply(lambda x : flow_types[x])
-
-
-        #training_set[category_columns] = training_set[category_columns].apply(lambda x : x.cat.codes)
 
         x_columns = training_set.columns.drop("target")
         x_training = training_set[x_columns].values
@@ -45,12 +45,12 @@ class DataLoader():
         #     if category != "target":
         #         testing_set[category] = testing_set[category].apply(lambda x : x.cat.codes)
 
-        testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
-        testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
-        testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
+        #testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
+        #testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
+        #testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
+        testing_set[category_columns] = testing_set[category_columns].apply(lambda x : x.cat.codes)
         testing_set["target"] = testing_set["target"].apply(lambda x : flow_types[x])
 
-        #testing_set[category_columns] = testing_set[category_columns].apply(lambda x : x.cat.codes)
 
         x_columns = testing_set.columns.drop("target")
         x_testing = testing_set[x_columns].values
