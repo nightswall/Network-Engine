@@ -1,7 +1,7 @@
 import pandas as pd
 from warnings import simplefilter
 
-flow_types = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flooding": 5}
+flow_types = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flood": 5}
 
 # The flow types, namely classes are now static since Pandas randomize class codes at every instance
 # it loads. So, they are made static to make them same throughout the whole project.
