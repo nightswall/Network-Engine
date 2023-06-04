@@ -13,6 +13,7 @@ class DataLoader():
         class_names = training_set.target.unique()
         training_set = training_set.astype("category")
         category_columns = training_set.select_dtypes(["category"]).columns
+        print(dict( enumerate(training_set[category_columns].cat.categories ) ))
 
         # for category in category_columns:
         #     if category != "target":
