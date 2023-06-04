@@ -31,7 +31,7 @@ class Model():
     monitor = tf.keras.callbacks.EarlyStopping(
               monitor = 'val_loss',
               min_delta = 1e-3,
-              patience = 5,
+              patience = 8,
               verbose = 1,
               mode = 'auto')
     # Code below will help us to save trained models and use them afterwards.
