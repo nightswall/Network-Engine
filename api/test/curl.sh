@@ -1,4 +1,4 @@
-FILE="test30.csv"
+FILE="test30_reduced.csv"
 
 # set the URL of the web server
 #URL="http://172.18.0.4:8000/api/predict/temperature" #for docker
@@ -9,6 +9,6 @@ while read -r line; do
   # send the line to the web server using curl
   # echo "$line"
   curl -X POST -d "data=$line" "$URL"
-  sleep 1
+  sleep 2
 done < "$FILE"
 

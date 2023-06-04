@@ -47,7 +47,7 @@ def train_model(training_set, testing_set):
                 batch_size = 1000
     )
     saver = tf.train.Saver()
-    sess = tf.keras.backend.get_session()
+    sess = tf.compat.v1.keras.backend.get_session()
     saver.save(sess, session_path)
 
 if __name__ == "__main__":

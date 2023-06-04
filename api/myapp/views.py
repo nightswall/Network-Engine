@@ -10,6 +10,8 @@ import pandas as pd
 import json
 import csv
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 from sklearn.preprocessing import MinMaxScaler
 from torch.utils.data import TensorDataset, DataLoader
 from django.views.decorators.csrf import csrf_exempt
@@ -86,17 +88,23 @@ class DataLoader():
         class_names = testing_set.target.unique()
         testing_set = testing_set.astype("category")
         category_columns = testing_set.select_dtypes(["category"]).columns
+        print(dict(enumerate(testing_set["target"].cat.categories)))
+	
+        #y_testing = testing_set["target"]
         #classes = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flooding": 5}
         classes = {"bruteforce": 0, "dos": 1, "flood": 2, "malformed": 4, "legitimate": 3, "slowite": 5}
         # for category in category_columns:
         #     if category != "target":
         #         testing_set[category] = testing_set[category].apply(lambda x : x.cat.codes)
 
-        
-        testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
-        testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
-        testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
+        #try:
+        testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float.fromhex(x) if isinstance(x, str) else float(x))
+        testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float.fromhex(x) if isinstance(x, str) else float(x))
+        testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float.fromhex(x) if isinstance(x, str) else float(x))
+        testing_set["mqtt.protoname"] = testing_set["mqtt.protoname"].apply(lambda x : x if x == 0 else 1)
         testing_set["target"] = testing_set["target"].apply(lambda x : classes[x])
+        
+        #print(testing_set["target"])
 
         x_columns = testing_set.columns.drop("target")
         x_testing = testing_set[x_columns].values
@@ -104,7 +112,7 @@ class DataLoader():
 
         return x_testing, y_testing
 
-flow_types = {3: "legitimate", 1: "dos", 0: "bruteforce", 4: "malformed", 5: "slowite", 2: "flooding"}
+flow_types = {4: "legitimate", 5: "dos", 3: "bruteforce", 0: "malformed", 1: "slowite", 2: "flooding"}
 model_checkpoint = "/home/gorkem/network-engine/api/myapp/cp70_reduced.ckpt"
 session_checkpoint = "/home/gorkem/network-engine/api/myapp/session.ckpt"
 
@@ -115,25 +123,27 @@ def get_prediction(incoming_message = None):
   # Compiling the pre-trained model beforehand to keep it from re-compiling again and again
   # in each call to the get_prediction function
 
-  model = Model()
-  detector, _ = model.create_model(33, model_checkpoint) # Creating a new model for reference
-  detector = model.load_model(detector, model_checkpoint, session_checkpoint) # Loading model checkpoint and session
-  detector.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy']) # Compiling the loaded model
+	model = Model()
+	detector, _ = model.create_model(33, model_checkpoint) # Creating a new model for reference
+	detector = model.load_model(detector, model_checkpoint, session_checkpoint) # Loading model checkpoint and session
+	detector.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy']) # Compiling the loaded model
 
 	if incoming_message is not None: # Checking if a valid request is made
+		#try:
 		prediction = detector.predict(incoming_message) # Prediction from the engine
 		prediction = np.argmax(prediction, axis = 1)
-		
+		#except:
+		#	return {"None"}
 		decisions = dict() # Response dictionary
 
 		# There are two main categories: Malicious and Legitimate. The flow types are the sub categories that convey more information
 		# about the malicious flows. So, the main types will be in 2 categories.
 
 		if flow_types[prediction[0]] != "legitimate":
-			decisions = {"type": "MALICIOUS", "predictions": flow_types[prediction[0]]} # If it is not legitimate, then it is malicious.
+			decisions = {"predictions": flow_types[prediction[0]]} # If it is not legitimate, then it is malicious.
 		else:
-			decisions = {"type": "LEGITIMATE", "predictions": flow_types[prediction[0]]}
-		return decisions
+			decisions = {"predictions": flow_types[prediction[0]]}
+		return flow_types[prediction[0]]
 
 @csrf_exempt
 def network_prediction(request):
@@ -143,8 +153,8 @@ def network_prediction(request):
 
 	df = pd.read_csv(csv_data, header = None, names = columns)
 	data_loader = DataLoader()
-	x, _ = data_loader.initialize_test_data(df)
-	return HttpResponse(json.dumps({"prediction": get_prediction(x)}))
+	x, y = data_loader.initialize_test_data(df)
+	return HttpResponse(json.dumps({"prediction" : get_prediction(x)}))
 
 @csrf_exempt
 def predict_network(request):
