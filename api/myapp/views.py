@@ -86,15 +86,16 @@ class DataLoader():
         class_names = testing_set.target.unique()
         testing_set = testing_set.astype("category")
         category_columns = testing_set.select_dtypes(["category"]).columns
-        classes = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flooding": 5}
-        for category in category_columns:
-            if category != "target":
-                testing_set[category] = testing_set[category].apply(lambda x : x.cat.codes)
+        #classes = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flooding": 5}
+				classes = {"bruteforce": 0, "dos": 1, "flood": 2, "malformed": 4, "legitimate": 3, "slowite": 5}
+        # for category in category_columns:
+        #     if category != "target":
+        #         testing_set[category] = testing_set[category].apply(lambda x : x.cat.codes)
 
         
-        #testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
-        #testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
-        #testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
+        testing_set["tcp.flags"] = testing_set["tcp.flags"].apply(lambda x : float(int(str(x), 16)))
+        testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
+        testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
         testing_set["target"] = testing_set["target"].apply(lambda x : classes[x])
 
         x_testing = testing_set[x_columns].values
@@ -102,27 +103,33 @@ class DataLoader():
 
         return x_testing, y_testing
 
-flow_types = {2: "legitimate", 1: "dos", 0: "bruteforce", 3: "malformed", 4: "slowite", 5: "flooding"}
+flow_types = {3: "legitimate", 1: "dos", 0: "bruteforce", 4: "malformed", 5: "slowite", 2: "flooding"}
 model_checkpoint = "/home/gorkem/network-engine/api/myapp/cp70_reduced.ckpt"
 session_checkpoint = "/home/gorkem/network-engine/api/myapp/session.ckpt"
 
+# Compiling the pre-trained model beforehand to keep it from re-compiling again and again
+# in each call to the get_prediction function
+
+model = Model()
+detector, _ = model.create_model(33, model_checkpoint) # Creating a new model for reference
+detector = model.load_model(detector, model_checkpoint, session_checkpoint) # Loading model checkpoint and session
+detector.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy']) # Compiling the loaded model
+
 
 def get_prediction(incoming_message = None):
-	global flow_types, model_checkpoint, session_checkpoint
-	model = Model()
-	detector, _ = model.create_model(33, model_checkpoint) # Creating a new model for reference
-	detector = model.load_model(detector, model_checkpoint, session_checkpoint) # Loading model checkpoint and session
-	detector.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
-	#print(incoming_message)
+	global flow_types, model_checkpoint, session_checkpoint, detector
 
 	if incoming_message is not None: # Checking if a valid request is made
 		prediction = detector.predict(incoming_message) # Prediction from the engine
 		prediction = np.argmax(prediction, axis = 1)
 		
-		decisions = dict()
+		decisions = dict() # Response dictionary
+
+		# There are two main categories: Malicious and Legitimate. The flow types are the sub categories that convey more information
+		# about the malicious flows. So, the main types will be in 2 categories.
 
 		if flow_types[prediction[0]] != "legitimate":
-			decisions = {"type": "MALICIOUS", "predictions": flow_types[prediction[0]]}
+			decisions = {"type": "MALICIOUS", "predictions": flow_types[prediction[0]]} # If it is not legitimate, then it is malicious.
 		else:
 			decisions = {"type": "LEGITIMATE", "predictions": flow_types[prediction[0]]}
 		return decisions
@@ -134,13 +141,8 @@ def network_prediction(request):
 	columns = ["tcp.flags", "tcp.time_delta", "tcp.len", "mqtt.conack.flags", "mqtt.conack.flags.reversed", "mqtt.conack.flags.sp", "mqtt.conack.val", "mqtt.conflag.cleansess", "mqtt.conflag.passwd", "mqtt.conflag.qos", "mqtt.conflag.reversed", "mqtt.conflag.retain", "mqtt.conflag.uname", "mqtt.conflag.willflag", "mqtt.conflags", "mqtt.dupflag", "mqtt.hdrflags", "mqtt.kalive", "mqtt.len", "mqtt.msg", "mqtt.msgid", "mqtt.msgtype", "mqtt.proto_len", "mqtt.protoname", "mqtt.qos", "mqtt.retain", "mqtt.sub.qos", "mqtt.suback.qos", "mqtt.ver", "mqtt.willmsg", "mqtt.willmsg_len", "mqtt.willtopic", "mqtt.willtopic_len", "target"]
 
 	df = pd.read_csv(csv_data, header = None, names = columns)
-	#print(data.split(","))
-	#del csv_data[-1]
-	#print(df)
-	#print(csv_data)
 	data_loader = DataLoader()
 	x, _ = data_loader.initialize_test_data(df)
-	#print(x)
 	return HttpResponse(json.dumps({"prediction": get_prediction(x)}))
 
 @csrf_exempt

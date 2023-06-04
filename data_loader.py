@@ -1,7 +1,7 @@
 import pandas as pd
 from warnings import simplefilter
 
-flow_types = {"bruteforce": 0, "dos": 1, "legitimate": 2, "malformed": 3, "slowite": 4, "flood": 5}
+flow_types = {"bruteforce": 0, "dos": 1, "flood": 2, "malformed": 4, "legitimate": 3, "slowite": 5}
 
 # The flow types, namely classes are now static since Pandas randomize class codes at every instance
 # it loads. So, they are made static to make them same throughout the whole project.
@@ -13,7 +13,7 @@ class DataLoader():
         class_names = training_set.target.unique()
         training_set = training_set.astype("category")
         category_columns = training_set.select_dtypes(["category"]).columns
-        print(dict( enumerate(training_set[category_columns].cat.categories ) ))
+        #print(dict( enumerate(training_set["target"].cat.categories ) ))
 
         # for category in category_columns:
         #     if category != "target":
@@ -29,7 +29,7 @@ class DataLoader():
 
 
         training_set[category_columns] = training_set[category_columns].apply(lambda x : x.cat.codes)
-        training_set["target"] = training_set["target"].apply(lambda x : flow_types[x])
+        #training_set["target"] = training_set["target"].apply(lambda x : flow_types[x])
 
         x_columns = training_set.columns.drop("target")
         x_training = training_set[x_columns].values
@@ -50,7 +50,7 @@ class DataLoader():
         #testing_set["mqtt.conflags"] = testing_set["mqtt.conflags"].apply(lambda x : float(int(str(x), 16)))
         #testing_set["mqtt.hdrflags"] = testing_set["mqtt.hdrflags"].apply(lambda x : float(int(str(x), 16)))
         testing_set[category_columns] = testing_set[category_columns].apply(lambda x : x.cat.codes)
-        testing_set["target"] = testing_set["target"].apply(lambda x : flow_types[x])
+        #testing_set["target"] = testing_set["target"].apply(lambda x : flow_types[x])
 
 
         x_columns = testing_set.columns.drop("target")
