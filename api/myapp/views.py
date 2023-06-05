@@ -12,8 +12,8 @@ import csv
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-from sklearn.preprocessing import MinMaxScaler
-from torch.utils.data import TensorDataset, DataLoader
+# from sklearn.preprocessing import MinMaxScaler
+# from torch.utils.data import TensorDataset, DataLoader
 from django.views.decorators.csrf import csrf_exempt
 
 import tensorflow as tf
@@ -113,8 +113,8 @@ class DataLoader():
         return x_testing, y_testing
 
 flow_types = {4: "legitimate", 5: "dos", 3: "bruteforce", 0: "malformed", 1: "slowite", 2: "flooding"}
-model_checkpoint = "/home/gorkem/network-engine/api/myapp/cp70_reduced.ckpt"
-session_checkpoint = "/home/gorkem/network-engine/api/myapp/session.ckpt"
+model_checkpoint = "./myapp/cp70_reduced.ckpt"
+session_checkpoint = "./myapp/session.ckpt"
 
 
 

@@ -2,7 +2,7 @@
 FROM python:3.10.6
 
 # Set the working directory in the container
-WORKDIR /gru-lstm
+WORKDIR /dlengine
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt .
